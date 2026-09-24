@@ -19,7 +19,7 @@ public class Ejercicios {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         
-        /**
+       
         //Ejercicio 1:
         System.out.println("Ejercicio 1 -----------------");
         File carpeta = new File("ficheros_dam");
@@ -38,7 +38,7 @@ public class Ejercicios {
             }
         }
         
-        * 
+         
         //Ejercicio 2:
         System.out.println("Ejercicio 2 -----------------");
         File temp = new File("ficheros_dam/temp.bak");
@@ -68,7 +68,7 @@ public class Ejercicios {
             }
         }
         
-        * 
+        
         //Ejercicio 3:
         System.out.println("Ejercicio 3 -----------------");
         File c = new File("MurciaFP/2026/AccesoDatos");
@@ -79,7 +79,7 @@ public class Ejercicios {
         c.renameTo(nc);
         System.out.println("Carpeta renombrada con éxito.");
             
-        * 
+        
         //Ejercicio 4:
         try (FileInputStream ois = new FileInputStream("logo.png")) {
             byte[] b = ois.readAllBytes();
@@ -92,7 +92,7 @@ public class Ejercicios {
             System.out.println(e);
         } 
         
-        * */
+
         //Ejercicio 5:
         
         
