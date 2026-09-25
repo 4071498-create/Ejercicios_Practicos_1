@@ -5,10 +5,12 @@
 package com.mycompany.ejercicios;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -139,7 +141,39 @@ try (BufferedReader br = new BufferedReader(new FileReader(nombreArchivo))) {
         }
 */ 
 //Ejercicio 6
+        String nombreArchivo = "calificaciones.txt";
+        // Cantidad de alumnos a registrar
+        int totalAlumnos = 3;
 
+        // Estructura try-with-resources para asegurar el cierre de flujos
+        try (Scanner teclado = new Scanner(System.in);
+             // El parámetro 'true' activa el modo APPEND para no borrar datos previos
+             BufferedWriter bw = new BufferedWriter(new FileWriter(nombreArchivo, true))) {
+
+            System.out.println("=== Registro de Calificaciones ===");
+
+            for (int i = 1; i <= totalAlumnos; i++) {
+                System.out.println("\nDatos del alumno " + i + ":");
+                
+                System.out.print("Nombre: ");
+                String nombre = teclado.nextLine();
+
+                System.out.print("Nota: ");
+                double nota = teclado.nextDouble();
+                teclado.nextLine(); // Limpieza crucial del buffer del Scanner
+
+                // Escribimos los datos formateados en el archivo
+                bw.write("Alumno: " + nombre + " | Nota: " + nota);
+                bw.newLine(); // Salto de línea multiplataforma para el próximo registro
+            }
+
+            System.out.println("\n[Éxito] Los datos se han añadido correctamente a '" + nombreArchivo + "'.");
+
+        } catch (IOException e) {
+            System.err.println("Ocurrió un error al interactuar con el archivo: " + e.getMessage());
+        }
+        
+// Ejercicio 7
     }
 }
 

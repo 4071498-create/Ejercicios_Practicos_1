@@ -1,0 +1,3 @@
+Alumno: Ortigosa | Nota: 0.0
+Alumno: ALejandro | Nota: 8.0
+Alumno: Pablo | Nota: 5.0
