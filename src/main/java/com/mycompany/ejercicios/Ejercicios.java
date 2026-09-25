@@ -4,21 +4,24 @@
 
 package com.mycompany.ejercicios;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
 
 /**
  *
- * @author prato
+ * @author pablo ejercicios 1-4 Ortigosa ejercicios 5-7 Alejandro ejercios 8-10
  */
+
 public class Ejercicios {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        
+/**        
        
         //Ejercicio 1:
         System.out.println("Ejercicio 1 -----------------");
@@ -91,10 +94,52 @@ public class Ejercicios {
         }catch(IOException e){
             System.out.println(e);
         } 
-        
+      
 
         //Ejercicio 5:
-        
-        
+String nombreArchivo = "quijote.txt";
+// Palabra exacta que buscamos contar
+String palabraBuscada = "Quijote";
+
+//contadores
+int totalLineas = 0;
+int totalPalabras = 0;
+
+//creamos el reader
+try (BufferedReader br = new BufferedReader(new FileReader(nombreArchivo))) {
+    String linea; // Solo la declaramos aquí
+
+//si lee la linea y no es null el contador de lineas +1
+    while ((linea = br.readLine()) != null) { 
+        totalLineas++; // Incrementamos el contador de líneas
+
+        // Dividimos la línea en palabras
+        // Si la línea está vacía, evitamos procesarla para que no dé errores
+        if (!linea.trim().isEmpty()) {
+            String[] palabras = linea.split("[\\s,.:;¿?¡!\"()-]+");
+
+            // Recorremos las palabras de la línea actual
+            for (String palabra : palabras) {
+                // Comparamos ignorando mayúsculas y minúsculas para mayor precisión
+                if (palabra.equalsIgnoreCase(palabraBuscada)) {
+                    totalPalabras++;
+                }
+            }
+        }
+    }
+
+    // Mostramos los resultados por consola
+    System.out.println("Resultados del analisis:");
+    System.out.println("------------------------");
+    System.out.println("Total de lineas en el archivo: " + totalLineas);
+    System.out.println("Total de veces que aparece '" + palabraBuscada + "': " + totalPalabras);
+
+} catch (IOException e) {
+    System.err.println("Error al leer el archivo: " + e.getMessage());
+        }
+*/ 
+//Ejercicio 6
+
     }
 }
+
