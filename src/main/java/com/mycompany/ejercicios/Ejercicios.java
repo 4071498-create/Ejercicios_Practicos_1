@@ -24,8 +24,8 @@ public class Ejercicios {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-/**        
-       
+        
+       /*
         //Ejercicio 1:
         System.out.println("Ejercicio 1 -----------------");
         File carpeta = new File("ficheros_dam");
@@ -141,18 +141,18 @@ try (BufferedReader br = new BufferedReader(new FileReader(nombreArchivo))) {
     System.err.println("Error al leer el archivo: " + e.getMessage());
         }
 //Ejercicio 6
-        String nombreArchivo = "calificaciones.txt";
+        String nombreArchivoej6 = "calificaciones.txt";
         // Cantidad de alumnos a registrar
         int totalAlumnos = 3;
 
         // Estructura try-with-resources para asegurar el cierre de flujos
         try (Scanner teclado = new Scanner(System.in);
              // El parámetro 'true' activa el modo APPEND para no borrar datos previos
-             BufferedWriter bw = new BufferedWriter(new FileWriter(nombreArchivo, true))) {
+             BufferedWriter bw = new BufferedWriter(new FileWriter(nombreArchivoej6, true))) {
 
             System.out.println("=== Registro de Calificaciones ===");
 
-            for (int i = 1; i <= totalAlumnos; i++) {
+            for (int iej6 = 1; iej6 <= totalAlumnos; iej6++) {
                 System.out.println("\nDatos del alumno " + i + ":");
                 
                 System.out.print("Nombre: ");
@@ -172,12 +172,12 @@ try (BufferedReader br = new BufferedReader(new FileReader(nombreArchivo))) {
         } catch (IOException e) {
             System.err.println("Ocurrió un error al interactuar con el archivo: " + e.getMessage());
         }
-        */         
+ */       
 // Ejercicio 7
-String nombreArchivo = "datos.dat";
+String nombreArchivoej7 = "datos.dat";
 
         // Uso de try-with-resources con modo "rw" (lectura y escritura)
-        try (RandomAccessFile file = new RandomAccessFile(nombreArchivo, "rw")) {
+        try (RandomAccessFile file = new RandomAccessFile(nombreArchivoej7, "rw")) {
             
             // 1. Escribir tres números enteros de forma consecutiva
             // Cada int en Java ocupa exactamente 4 bytes
@@ -201,9 +201,9 @@ String nombreArchivo = "datos.dat";
 
             System.out.println("\n--- Contenido actual del archivo datos.dat ---");
             // Leemos los 3 enteros de forma consecutiva
-            for (int i = 1; i <= 3; i++) {
+            for (int iej7 = 1; iej7 <= 3; iej7++) {
                 int numero = file.readInt();
-                System.out.println("Número " + i + ": " + numero);
+                System.out.println("Número " + iej7 + ": " + numero);
             }
 
         } catch (IOException e) {
