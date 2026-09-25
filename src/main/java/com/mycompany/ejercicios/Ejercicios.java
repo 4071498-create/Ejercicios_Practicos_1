@@ -12,6 +12,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.Scanner;
 
 /**
@@ -139,7 +140,6 @@ try (BufferedReader br = new BufferedReader(new FileReader(nombreArchivo))) {
 } catch (IOException e) {
     System.err.println("Error al leer el archivo: " + e.getMessage());
         }
-*/ 
 //Ejercicio 6
         String nombreArchivo = "calificaciones.txt";
         // Cantidad de alumnos a registrar
@@ -172,8 +172,43 @@ try (BufferedReader br = new BufferedReader(new FileReader(nombreArchivo))) {
         } catch (IOException e) {
             System.err.println("Ocurrió un error al interactuar con el archivo: " + e.getMessage());
         }
-        
+        */         
 // Ejercicio 7
+String nombreArchivo = "datos.dat";
+
+        // Uso de try-with-resources con modo "rw" (lectura y escritura)
+        try (RandomAccessFile file = new RandomAccessFile(nombreArchivo, "rw")) {
+            
+            // 1. Escribir tres números enteros de forma consecutiva
+            // Cada int en Java ocupa exactamente 4 bytes
+            file.writeInt(67); // Posición 0 (Bytes 0-3)
+            file.writeInt(420); // Posición 4 (Bytes 4-7) -> Este será el segundo número
+            file.writeInt(67); // Posición 8 (Bytes 8-11)
+            
+            System.out.println("--- Archivo creado con los números: 67, 420, 67 ---");
+
+            // 2. Saltar directamente a la posición del segundo número
+            // Como el primer entero ocupa 4 bytes, el segundo empieza en el byte 4
+            file.seek(4);
+
+            // 3. Modificar el segundo número por el valor 999
+            file.writeInt(67);
+            System.out.println("-> Modificado el segundo número por 67.");
+
+            // 4. Volver a leer todo el archivo para comprobar el cambio
+            // Primero posicionamos el puntero al inicio del archivo (byte 0)
+            file.seek(0);
+
+            System.out.println("\n--- Contenido actual del archivo datos.dat ---");
+            // Leemos los 3 enteros de forma consecutiva
+            for (int i = 1; i <= 3; i++) {
+                int numero = file.readInt();
+                System.out.println("Número " + i + ": " + numero);
+            }
+
+        } catch (IOException e) {
+            System.err.println("Ocurrió un error al manipular el archivo: " + e.getMessage());
+        }
     }
 }
 
