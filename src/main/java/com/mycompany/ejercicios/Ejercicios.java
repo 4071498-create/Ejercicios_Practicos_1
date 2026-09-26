@@ -1,31 +1,40 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
-
 package com.mycompany.ejercicios;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Scanner;
-
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 /**
  *
  * @author pablo ejercicios 1-4 Ortigosa ejercicios 5-7 Alejandro ejercios 8-10
  */
-
 public class Ejercicios {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+
         
-       /*
         //Ejercicio 1:
         System.out.println("Ejercicio 1 -----------------");
         File carpeta = new File("ficheros_dam");
@@ -44,7 +53,7 @@ public class Ejercicios {
             }
         }
         
-         Prueba
+         
         //Ejercicio 2:
         System.out.println("Ejercicio 2 -----------------");
         File temp = new File("ficheros_dam/temp.bak");
@@ -172,7 +181,7 @@ try (BufferedReader br = new BufferedReader(new FileReader(nombreArchivo))) {
         } catch (IOException e) {
             System.err.println("Ocurrió un error al interactuar con el archivo: " + e.getMessage());
         }
- */       
+       
 // Ejercicio 7
 String nombreArchivoej7 = "datos.dat";
 
@@ -208,6 +217,90 @@ String nombreArchivoej7 = "datos.dat";
 
         } catch (IOException e) {
             System.err.println("Ocurrió un error al manipular el archivo: " + e.getMessage());
+        }
+        //Ejercicio 8
+        
+       //pedidmos ruta al usuario
+        System.out.println("Dime la ruta que desea abrir: ");
+        String ruta = scanner.nextLine();
+        
+        //try catch para capturar las excepciones 
+        try (BufferedReader lector = new BufferedReader(new FileReader(ruta))){
+            System.out.println("Contenido: ");
+            String linea;
+       //leemos el archivo linea a linea
+            while((linea = lector.readLine()) != null){
+                System.out.println(linea);
+            }
+        }catch(FileNotFoundException e){
+            System.out.println("Archivo no encontrado");
+        }catch(IOException e){
+            System.out.println("Error E/S");
+        }finally{
+            scanner.close();
+        }
+         
+        //Ejercicio 9
+        
+        String archivo = "datos_notas.txt";
+        int nlineas = 0;
+
+        try (BufferedReader lector = new BufferedReader(new FileReader(archivo))) {
+            String linea;
+            while ((linea = lector.readLine()) != null) {
+                //numero de lineas y quitar las lineas en blanco
+                nlineas++;
+                linea = linea.trim();
+                if (linea.isEmpty()) {
+                    continue;
+                }
+                //try para enseañar las lineas y las notas
+                try {
+                    double nota = Double.parseDouble(linea);
+                    System.out.println("Línea " + nlineas + " - Nota válida: " + nota);
+                } catch (NumberFormatException e) {
+                    System.out.println("Aviso [Línea " + nlineas + "]: El valor '" + linea + "' no es un número válido. Se ignora.");
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("No se encontro el arhcivo");
+        } catch (IOException e) {
+            System.out.println("Error de E/S");
+        }
+        
+        //Ejercicio 10
+        try {
+            //ceramos el documento
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.newDocument();
+            //Le indicamos la raiz 
+            Element root = doc.createElement("instituto");
+            doc.appendChild(root);
+            //los elementos
+            Element modulo = doc.createElement("modulo");
+            modulo.setAttribute("codigo", "dam");
+            modulo.setTextContent("Acceso a Datos");
+            root.appendChild(modulo);
+            //guardar el archivo en fpormato xml
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+
+            // Configurar sangría para formato amigable
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+
+            DOMSource source = new DOMSource(doc);
+            StreamResult result = new StreamResult(new File("instituto.xml"));
+
+            transformer.transform(source, result);
+
+            System.out.println("Archivo 'instituto.xml' generado con éxito.");
+
+        } catch (ParserConfigurationException e) {
+            System.err.println("Error de configuración del analizador DOM: " + e.getMessage());
+        } catch (TransformerException e) {
+            System.err.println("Error al transformar/escribir el archivo XML: " + e.getMessage());
         }
     }
 }
