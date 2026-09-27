@@ -1,34 +1,54 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
-
 package com.mycompany.ejercicios;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.Scanner;
-
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 /**
  *
- * @author prato
+ * @author pablo ejercicios 1-4 Ortigosa ejercicios 5-7 Alejandro ejercios 8-10
  */
 public class Ejercicios {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+
         
-       
         //Ejercicio 1:
         System.out.println("Ejercicio 1 -----------------");
         File carpeta = new File("ficheros_dam");
+        
+        //Compruebo si existe la carpeta
         if(carpeta.exists() && carpeta.isDirectory()){
+            //Si existe listo sus archivos y los cuento con .lenght
             String[] ficheros = carpeta.list();
             System.out.println("La carpeta 'ficheros_dam' existe y contiene " + ficheros.length + " archivo(s)");
         }else{
+            //Si no existe la creo
             System.out.println("La carpeta 'ficheros_dam' no existe, creandola...");
             carpeta.mkdir();
+            //Creo un archivo vacio dentro de la carpeta que acabo de crear, con un try catch por si diera error
             File log = new File("ficheros_dam/setup.log");
             try {
                 log.createNewFile();
@@ -41,19 +61,30 @@ public class Ejercicios {
          
         //Ejercicio 2:
         System.out.println("Ejercicio 2 -----------------");
-        File temp = new File("ficheros_dam/temp.bak");
+        
+        
+        //Creo aqui el archivo para no tener que entrar al directorio a crearlo manualmente cada vez que quiera probar que funcione
+        File creartemp = new File("ficheros_dam/temp.bak");
             try {
-                temp.createNewFile();
+                creartemp.createNewFile();
             } catch (IOException e) {
                 System.out.println(e);
             }
+            
+            
+        //Meto el proceso dentro de un bucle para que si el usuario pone un directorio incorrecto pueda volver a probar
         while(true){
             System.out.print("Introduzca una ruta para limpiar: ");
             String ruta = scanner.nextLine();
             File carpetaLimpiar = new File(ruta);
+            
+            //Compruebo que el directorio introducido exista
             if(carpetaLimpiar.exists()){
+                File temp = new File(carpetaLimpiar,"temp.bak");
                 if(temp.exists()){
-                    System.out.print("Desea borrar el archivo '" + temp.getName()+"'? s/n ");
+                    
+                    //Si el archivo a borrar existe dentro de la carpeta, pido confirmacion y lo borro
+                    System.out.print("Desea borrar el archivo '" + temp.getName()+"'? (S/any) ");
                     String res = scanner.nextLine();
                     if("s".equals(res) | "S".equals(res)){
                         temp.delete();
@@ -71,30 +102,249 @@ public class Ejercicios {
         
         //Ejercicio 3:
         System.out.println("Ejercicio 3 -----------------");
+        
+        //Empiezo creando la estructura de carpetas inicial
         File c = new File("MurciaFP/2026/AccesoDatos");
         c.mkdirs();
-        System.out.println("Creado el sistema de carpetas, presione enter para renombrar la ultima carpeta: ");
-        String i = scanner.nextLine();
+        System.out.print("Creado el sistema de carpetas, presione enter para renombrar la ultima carpeta: ");
+        String res = scanner.nextLine();
+        
+        //Ahora inicializo una nueva estructura de carpetas y renombo la existente a la nueva
         File nc = new File("MurciaFP/2026/AD_Backup");
         c.renameTo(nc);
         System.out.println("Carpeta renombrada con éxito.");
             
         
         //Ejercicio 4:
+        System.out.println("Ejercicio 4 -----------------");
+        
         try (FileInputStream ois = new FileInputStream("logo.png")) {
+            
+            //Inicializo un file input stream de la imagen que debe leer y un array de bytes para almacenar la informacion de la imagen
             byte[] b = ois.readAllBytes();
             try (FileOutputStream oos = new FileOutputStream("copia_logo.png")) {
+                
+                //Inicializo un file output stream y creo una copia de la imagen escribiendo la informacion guardada en el array de bytes
                 oos.write(b);
+                oos.close();
             }catch(IOException e){
             System.out.println(e);
-        }
+            }
+            ois.close();
         }catch(IOException e){
             System.out.println(e);
         } 
+        //Despues de hacer cada ooperacion, cierro los streams
+      
         
-
         //Ejercicio 5:
+        System.out.println("Ejercicio 5 -----------------");
+        String nombreArchivo = "quijote.txt";
+        // Palabra exacta que buscamos contar
+        String palabraBuscada = "Quijote";
+
+        //contadores
+        int totalLineas = 0;
+        int totalPalabras = 0;
+
+        //creamos el reader
+        try (BufferedReader br = new BufferedReader(new FileReader(nombreArchivo))) {
+            String linea; // Solo la declaramos aquí
+
+            //si lee la linea y no es null el contador de lineas +1
+            while ((linea = br.readLine()) != null) { 
+                totalLineas++; // Incrementamos el contador de líneas
+
+                // Dividimos la línea en palabras
+                // Si la línea está vacía, evitamos procesarla para que no dé errores
+                if (!linea.trim().isEmpty()) {
+                    String[] palabras = linea.split("[\\s,.:;¿?¡!\"()-]+");
+
+                    // Recorremos las palabras de la línea actual
+                    for (String palabra : palabras) {
+                        // Comparamos ignorando mayúsculas y minúsculas para mayor precisión
+                        if (palabra.equalsIgnoreCase(palabraBuscada)) {
+                            totalPalabras++;
+                        }
+                    }
+                }
+            }
+
+            // Mostramos los resultados por consola
+            System.out.println("Resultados del analisis:");
+            System.out.println("------------------------");
+            System.out.println("Total de lineas en el archivo: " + totalLineas);
+            System.out.println("Total de veces que aparece '" + palabraBuscada + "': " + totalPalabras);
+
+        } catch (IOException e) {
+            System.err.println("Error al leer el archivo: " + e.getMessage());
+        }
+
+
+        //Ejercicio 6
+        System.out.println("Ejercicio 6 -----------------");
+        String nombreArchivoej6 = "calificaciones.txt";
+        // Cantidad de alumnos a registrar
+        int totalAlumnos = 3;
+
+        // Estructura try-with-resources para asegurar el cierre de flujos
+        try (Scanner teclado = new Scanner(System.in);
+             // El parámetro 'true' activa el modo APPEND para no borrar datos previos
+             BufferedWriter bw = new BufferedWriter(new FileWriter(nombreArchivoej6, true))) {
+
+            System.out.println("=== Registro de Calificaciones ===");
+
+            for (int iej6 = 1; iej6 <= totalAlumnos; iej6++) {
+                System.out.println("\nDatos del alumno " + iej6 + ":");
+                
+                System.out.print("Nombre: ");
+                String nombre = teclado.nextLine();
+
+                System.out.print("Nota: ");
+                double nota = teclado.nextDouble();
+                teclado.nextLine(); // Limpieza crucial del buffer del Scanner
+
+                // Escribimos los datos formateados en el archivo
+                bw.write("Alumno: " + nombre + " | Nota: " + nota);
+                bw.newLine(); // Salto de línea multiplataforma para el próximo registro
+            }
+
+            System.out.println("\n[Éxito] Los datos se han añadido correctamente a '" + nombreArchivo + "'.");
+
+        } catch (IOException e) {
+            System.err.println("Ocurrió un error al interactuar con el archivo: " + e.getMessage());
+        }
+       
         
+        // Ejercicio 7
+        System.out.println("Ejercicio 7 -----------------");
+        String nombreArchivoej7 = "datos.dat";
+
+        // Uso de try-with-resources con modo "rw" (lectura y escritura)
+        try (RandomAccessFile file = new RandomAccessFile(nombreArchivoej7, "rw")) {
+            
+            // 1. Escribir tres números enteros de forma consecutiva
+            // Cada int en Java ocupa exactamente 4 bytes
+            file.writeInt(67); // Posición 0 (Bytes 0-3)
+            file.writeInt(420); // Posición 4 (Bytes 4-7) -> Este será el segundo número
+            file.writeInt(67); // Posición 8 (Bytes 8-11)
+            
+            System.out.println("--- Archivo creado con los números: 67, 420, 67 ---");
+
+            // 2. Saltar directamente a la posición del segundo número
+            // Como el primer entero ocupa 4 bytes, el segundo empieza en el byte 4
+            file.seek(4);
+
+            // 3. Modificar el segundo número por el valor 999
+            file.writeInt(67);
+            System.out.println("-> Modificado el segundo número por 67.");
+
+            // 4. Volver a leer todo el archivo para comprobar el cambio
+            // Primero posicionamos el puntero al inicio del archivo (byte 0)
+            file.seek(0);
+
+            System.out.println("\n--- Contenido actual del archivo datos.dat ---");
+            // Leemos los 3 enteros de forma consecutiva
+            for (int iej7 = 1; iej7 <= 3; iej7++) {
+                int numero = file.readInt();
+                System.out.println("Número " + iej7 + ": " + numero);
+            }
+
+        } catch (IOException e) {
+            System.err.println("Ocurrió un error al manipular el archivo: " + e.getMessage());
+        }
+        
+        
+        //Ejercicio 8
+        System.out.println("Ejercicio 8 -----------------");
+        
+       //pedidmos ruta al usuario
+        System.out.println("Dime la ruta que desea abrir: ");
+        String ruta = scanner.nextLine();
+        
+        //try catch para capturar las excepciones 
+        try (BufferedReader lector = new BufferedReader(new FileReader(ruta))){
+            System.out.println("Contenido: ");
+            String linea;
+       //leemos el archivo linea a linea
+            while((linea = lector.readLine()) != null){
+                System.out.println(linea);
+            }
+        }catch(FileNotFoundException e){
+            System.out.println("Archivo no encontrado");
+        }catch(IOException e){
+            System.out.println("Error E/S");
+        }finally{
+            scanner.close();
+        }
+        
+         
+        //Ejercicio 9
+        System.out.println("Ejercicio 9 -----------------");
+        
+        String archivo = "datos_notas.txt";
+        int nlineas = 0;
+
+        try (BufferedReader lector = new BufferedReader(new FileReader(archivo))) {
+            String linea;
+            while ((linea = lector.readLine()) != null) {
+                //numero de lineas y quitar las lineas en blanco
+                nlineas++;
+                linea = linea.trim();
+                if (linea.isEmpty()) {
+                    continue;
+                }
+                //try para enseañar las lineas y las notas
+                try {
+                    double nota = Double.parseDouble(linea);
+                    System.out.println("Línea " + nlineas + " - Nota válida: " + nota);
+                } catch (NumberFormatException e) {
+                    System.out.println("Aviso [Línea " + nlineas + "]: El valor '" + linea + "' no es un número válido. Se ignora.");
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("No se encontro el arhcivo");
+        } catch (IOException e) {
+            System.out.println("Error de E/S");
+        }
+        
+        
+        //Ejercicio 10
+        System.out.println("Ejercicio 10 -----------------");
+        try {
+            //ceramos el documento
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.newDocument();
+            //Le indicamos la raiz 
+            Element root = doc.createElement("instituto");
+            doc.appendChild(root);
+            //los elementos
+            Element modulo = doc.createElement("modulo");
+            modulo.setAttribute("codigo", "dam");
+            modulo.setTextContent("Acceso a Datos");
+            root.appendChild(modulo);
+            //guardar el archivo en fpormato xml
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+
+            // Configurar sangría para formato amigable
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+
+            DOMSource source = new DOMSource(doc);
+            StreamResult result = new StreamResult(new File("instituto.xml"));
+
+            transformer.transform(source, result);
+
+            System.out.println("Archivo 'instituto.xml' generado con éxito.");
+
+        } catch (ParserConfigurationException e) {
+            System.err.println("Error de configuración del analizador DOM: " + e.getMessage());
+        } catch (TransformerException e) {
+            System.err.println("Error al transformar/escribir el archivo XML: " + e.getMessage());
+        }
         
     }
 }
+
